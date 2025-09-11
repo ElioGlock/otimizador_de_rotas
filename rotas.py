@@ -17,38 +17,45 @@ driver.maximize_window()
 def open_routes():
     routes = driver.find_element(By.ID,"hArJGc")
     routes.click()
+    time.sleep(2)
     
-def set_places():
+def set_place():
     start_place = driver.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[9]/div[3]/div[1]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[1]/div/input")
     time.sleep(1)
     start_place.send_keys(startpoint)
-    second_place = driver.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[9]/div[3]/div[1]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div/input")
-    second_place.send_keys(enderecos[0])
-    second_place.send_keys(Keys.ENTER)
+    time.sleep(1)
     
 def new_places():
     for c in list(range(len(enderecos))):
+        if c == 0:
+            second_place = driver.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[9]/div[3]/div[1]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div/input")
+            second_place.send_keys(enderecos[0])
+            second_place.send_keys(Keys.ENTER)
         if c != 0:
             new = driver.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[9]/div[3]/div[1]/div[2]/div/div[2]/button/div[2]")
             new.click()
             if c == 0:
                 pass
-            if c ==1:
-                f = 3
-            if c ==2:
-                f = 4
-            if c ==3:
-                f = 5
+            f = c + 2
             new_input = driver.find_element(By.XPATH,f"/html/body/div[1]/div[3]/div[9]/div[3]/div[1]/div[2]/div/div[2]/div[1]/div[{f}]/div[2]/div[1]/div/input")
             new_input.send_keys(enderecos[c])
             new_input.send_keys(Keys.ENTER)
             time.sleep(2)
+    time.sleep(1)
         
 def return_time():
     xpath = '//div[@id="section-directions-trip-0"]//div[contains(text(),"min")]'
     wait = WebDriverWait(driver,timeout=3)
     time_element = wait.until(EC.presence_of_element_located((By.XPATH,xpath)))
     print(time_element.text)
+    return time_element.text
+
+def return_distance():
+    xpath = '//div[@id="section-directions-trip-0"]//div[contains(text(),"km")]'
+    wait = WebDriverWait(driver,timeout=3)
+    time_element = wait.until(EC.presence_of_element_located((By.XPATH,xpath)))
+    print(time_element.text)
+    return time_element.text
 
  
 if __name__ == "__main__":
@@ -59,12 +66,7 @@ if __name__ == "__main__":
                  "Praça Charles Miller, s/n - Pacaembu, São Paulo - SP, 01234-010",
                  "Av. Sen. Teotônio Vilela, 261 - Jardim Malia I, São Paulo - SP, 04801-000"]
                  
-    open_routes()
-    time.sleep(2)
-    set_places()
-    time.sleep(1)
-    new_places()
-    time.sleep(1)
-    return_time()
+    pairs_distance = pairs(enderecos)
+    print(pairs_distance)
  
 time.sleep(600)
